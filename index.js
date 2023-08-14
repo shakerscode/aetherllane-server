@@ -1,11 +1,10 @@
 require('dotenv').config();
-import cors from 'cors';
-import express from 'express';
-import { MongoClient, ObjectId, ServerApiVersion } from 'mongodb';
+const express = require('express');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 5000;
-
 
 app.use(cors());
 app.use(express.json());
@@ -20,8 +19,8 @@ const client = new MongoClient(uri, {
 
 const run = async () => {
   try {
-    const db = client.db('bruno');
-    const blogCollection = db.collection('blogs');
+    const db = client.db('pc-builder');
+    const blogCollection = db.collection('products');
 
     // all products
     app.get('/products', async (req, res) => {
