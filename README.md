@@ -4,5 +4,5 @@
 
 ### Blogs
 
-- []() (all products)
+- []() (all blogs)
 - []() (get single blog)
