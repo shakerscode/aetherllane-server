@@ -1,13 +1,14 @@
 require('dotenv').config();
-import express, { json } from 'express';
+import cors from 'cors';
+import express from 'express';
 import { MongoClient, ObjectId, ServerApiVersion } from 'mongodb';
+
 const app = express();
 const port = process.env.PORT || 5000;
 
-import cors from 'cors';
 
 app.use(cors());
-app.use(json());
+app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.wn4h1rl.mongodb.net/?retryWrites=true&w=majority`;
 
