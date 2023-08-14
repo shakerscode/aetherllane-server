@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.wn4h1rl.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.2rwge.mongodb.net/?retryWrites=true&w=majority`;
 
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
@@ -19,18 +19,18 @@ const client = new MongoClient(uri, {
 
 const run = async () => {
   try {
-    const db = client.db('pc-builder');
-    const blogCollection = db.collection('products');
+    const db = client.db('bruno-membership-db');
+    const blogCollection = db.collection('blogs');
 
-    // all products
-    app.get('/products', async (req, res) => {
+    // all Blogs
+    app.get('/blogs', async (req, res) => {
       const cursor = blogCollection.find({});
       const product = await cursor.toArray();
 
       res.send({ status: true, data: product });
     });
 
-    app.get('/product/:id', async (req, res) => {
+    app.get('/blog/:id', async (req, res) => {
       const id = req.params.id;
 
       const result = await blogCollection.findOne({ _id: ObjectId(id) });
