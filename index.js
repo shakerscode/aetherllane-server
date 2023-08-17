@@ -38,10 +38,10 @@ const run = async () => {
     });
 
     //update blog
-    app.put("/blog/:id", async (req, res) => {
+    app.patch("/blog/:id", async (req, res) => {
       const id = req.params.id;
       const updateData = req.body;
-
+      console.log(updateData);
       try {
         const result = await blogCollection.updateOne(
           { _id: ObjectId(id) },
