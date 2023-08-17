@@ -1,5 +1,7 @@
 require("dotenv").config();
 const express = require("express");
+const dotenv = require("dotenv");
+const jwt = require("jsonwebtoken");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const cors = require("cors");
 
@@ -21,6 +23,47 @@ const run = async () => {
   try {
     const db = client.db("bruno-membership-db");
     const blogCollection = db.collection("blogs");
+    const usersCollection = db.collection("users");
+
+    //auth
+    app.post("/login", async (req, res) => {
+      const { adminId, password } = req.body;
+      try {
+        const user = await usersCollection.findOne({
+          userName: adminId,
+          password,
+        }); 
+
+        if (user) {
+          const token = jwt.sign(
+            { username: adminId },
+            process.env.JWT_SECRET_KEY,
+            {
+              expiresIn: "30d",
+            }
+          );
+          res.send({ status: true, message: "Login successful", token });
+        } else {
+          res
+            .status(401)
+            .send({ status: false, message: "Invalid credentials" });
+        }
+      } catch (error) {
+        res.status(500).send({ status: false, message: "Error during login" });
+      }
+    });
+
+    //auth validation
+    app.get("/auth-validation", (req, res) => {
+      const token = req.headers.authorization.split(" ")[1];  
+ 
+      try {
+        const decoded = jwt.verify(token,  process.env.JWT_SECRET_KEY); 
+        res.send({ status: true, message: "Authorized", user: decoded.userId });
+      } catch (error) {
+        res.status(401).send({ status: false, message: "Unauthorized" });
+      }
+    });
 
     // all Blogs
     app.get("/blogs", async (req, res) => {
@@ -81,8 +124,6 @@ const run = async () => {
         res.status(500).send({ status: false, message: "Error deleting blog" });
       }
     });
-
-    
   } finally {
   }
 };
